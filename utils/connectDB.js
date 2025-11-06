@@ -8,8 +8,8 @@ export default async function connectDB() {
   if (isConnected) return
   try {
     await mongoose.connect(process.env.DB_URI)
-    isConnected = true
     if (mongoose.connection.readyState === 1) {
+      isConnected = true
       console.log(
         '✅ Mongoose is connected, DB_Name:',
         mongoose.connection.name
