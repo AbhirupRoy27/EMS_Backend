@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const adminSchema = mongoose.Schema(
+const adminSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -28,4 +28,4 @@ const adminSchema = mongoose.Schema(
   }
 )
 
-export const adminModel = mongoose.model('admin', adminSchema)
+export const AdminModel = mongoose.model('admin', adminSchema)
