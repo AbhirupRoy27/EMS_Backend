@@ -12,7 +12,7 @@ addAdmin.get('/', (req, res) => {
   })
 })
 
-addAdmin.get('/admin-login', async (req, res) => {
+addAdmin.post('/admin-login', async (req, res) => {
   try {
     const { email, password } = req.body
     connectDB()
