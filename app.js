@@ -3,12 +3,14 @@ import cors from 'cors'
 import defRoutes from './controllers/default.js'
 import addAdmin from './controllers/admin.js'
 import routeNotfound from './controllers/notFound.js'
+import employee from './controllers/employee.js'
 const app = express()
 
 app.use(express.json())
 app.use(cors())
 
 app.use('/api/admin', addAdmin)
+app.use('/api/employee', employee)
 app.use('/', defRoutes)
 app.use(routeNotfound)
 
