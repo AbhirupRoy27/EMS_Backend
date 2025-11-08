@@ -5,7 +5,7 @@ import { AdminModel } from '../db/adminSchema.js'
 const addAdmin = Router()
 
 addAdmin.get('/', (req, res) => {
-  connectDB()
+  // connectDB()
   res.status(200).json({
     message: 'Admin is working good.',
     url: req.url,
