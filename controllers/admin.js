@@ -2,10 +2,12 @@ import { Router } from 'express'
 import connectDB from '../utils/connectDB.js'
 import bcrypt from 'bcrypt'
 import { AdminModel } from '../db/adminSchema.js'
+import duplicateValueError from '../utils/duplicateValueError.js'
+import { dataAdded, defaultError } from '../utils/commonResponse.js'
+import { serverError } from '../utils/errorHandler.js'
 const addAdmin = Router()
 
 addAdmin.get('/', (req, res) => {
-  // connectDB()
   res.status(200).json({
     message: 'Admin is working good.',
     url: req.url,
@@ -14,23 +16,23 @@ addAdmin.get('/', (req, res) => {
 
 addAdmin.post('/admin-login', async (req, res) => {
   try {
+    if (!req.body) {
+      throw new Error('No Body Provided: [Body Empty]')
+    }
     const { email, password } = req.body
     connectDB()
     const admin = await AdminModel.findOne({ email: email })
     const isMatch = await bcrypt.compare(password, admin.password)
     res.status(200).json({ isMatch })
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Internal Server Error',
-    })
+    serverError(res, error)
   }
 })
 
 addAdmin.post('/add-admin', async (req, res) => {
   try {
     if (!req.body) {
-      return res.status(404).json({ message: `Not found: data` })
+      return errorEmptyBody()
     }
     const { name, email, password } = req.body
     const hashPass = await bcrypt.hash(password, 10)
@@ -40,16 +42,12 @@ addAdmin.post('/add-admin', async (req, res) => {
       email,
       password: hashPass,
     })
-    res.status(200).json(admin)
+    return dataAdded(res, admin)
   } catch (error) {
     if (error.code == 11000) {
-      return res.status(409).json({
-        success: false,
-        message:
-          'duplicate key error collection key: { email: "rabhirup605@gmail.com" }',
-      })
+      return duplicateValueError(res, error)
     }
-    res.status(404).json({ message: error })
+    defaultError(res, error)
   }
 })
 

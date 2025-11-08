@@ -1,7 +1,9 @@
 import { Router } from 'express'
-import { employeeDataFormatter } from '../utils/empFormatter.js'
 import connectDB from '../utils/connectDB.js'
+import { employeeDataFormatter } from '../utils/empFormatter.js'
 import { Employee } from '../db/empSchema.js'
+import duplicateValueError from '../utils/duplicateValueError.js'
+import { dataAdded, defaultError } from '../utils/commonResponse.js'
 const employee = Router()
 
 employee.get('/', (req, res) => {
@@ -15,28 +17,17 @@ employee.get('/', (req, res) => {
 employee.post('/add-emp', async (req, res) => {
   try {
     if (!req.body) {
-      throw new Error('Error working')
+      throw new Error('No Body Provided: [Body Empty]')
     }
-    const data = await employeeDataFormatter(req)
     connectDB()
+    const data = await employeeDataFormatter(req)
     const updated = await Employee.create(data)
-    res.status(200).json({
-      status: true,
-      message: 'Employee Added!',
-      data: updated,
-    })
+    return dataAdded(res, updated)
   } catch (error) {
     if (error.code === 11000) {
-      return res.status(409).json({
-        status: false,
-        message: 'duplicate key: { email: "abhirup605roy@gmail.com" }',
-      })
+      return duplicateValueError(res, error)
     }
-    res.status(404).json({
-      status: false,
-      message: 'Employee Not Found!',
-      error: error.message,
-    })
+    defaultError(res, error)
   }
 })
 
