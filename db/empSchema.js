@@ -15,10 +15,12 @@ const TaskSchema = new mongoose.Schema(
     task_given_by: {
       type: String,
       required: true,
+      trim: true,
     },
     task_description: {
       type: String,
       trim: true,
+      required: true,
     },
     task_category: {
       type: String,
@@ -26,6 +28,7 @@ const TaskSchema = new mongoose.Schema(
     },
     deadline: {
       type: Date,
+      required: true,
     },
   },
   {
@@ -44,6 +47,7 @@ const EmployeeSchema = new mongoose.Schema({
     required: true,
     unique: true,
     lowercase: true,
+    trim: true,
   },
   position: String,
   department: String,

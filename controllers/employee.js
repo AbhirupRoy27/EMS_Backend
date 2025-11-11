@@ -23,6 +23,7 @@ employee.post('/add-emp', async (req, res) => {
     connectDB()
     const data = await employeeDataFormatter(req)
     const updated = await Employee.create(data)
+    console.log(updated)
     return dataAdded(res, updated)
   } catch (error) {
     if (error.code === 11000) {
@@ -38,22 +39,31 @@ employee.post('/add-task', async (req, res) => {
       throw Error('Empty Body')
     }
     connectDB()
-    const user = await Employee.findOne({ email: req.body.email })
-    const date = dateFormatter(req.body.task)
-    const task = req.body.task
-    task.deadline = date
+    // await Employee.collection.dropIndexes()
+    // await Employee.syncIndexes()
+    const email = req.body.email.trim()
+    const user = await Employee.findOne({ email: email })
     if (!user) {
-      return res.status(404).json({ status: false, message: 'No User Found' })
+      throw Error(`No Employee with email: { ${req.body.email.trim()} }`)
     }
+    const task = dateFormatter(req.body)
+
     const updatedTask = await Employee.updateOne(
-      { email: req.body.email },
+      { email: email },
       { $push: { tasks: task } }
     )
+    if (updatedTask.matchedCount > 0) {
+      return res.status(200).json({
+        status: true,
+        message: 'Working',
+        task,
+      })
+    }
+    // res.status(304).end()  // use this because, res.status(304).json({..}) construct is a logical inconsistency in HTTP communication and should be avoided.
     res.status(200).json({
       status: true,
-      message: 'Working',
-      data: user,
-      task,
+      message: 'No data changed',
+      updatedTask,
     })
   } catch (error) {
     if (error.message == 'Empty Body') {
@@ -72,7 +82,7 @@ employee.get('/get-tasks', async (req, res) => {
 
     res.status(200).json({
       status: true,
-      message: 'Working',
+      message: 'List of all tasks.',
       data: user.tasks,
     })
   } catch (error) {
