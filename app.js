@@ -1,9 +1,9 @@
 import express from 'express'
 import cors from 'cors'
-import defRoutes from './controllers/default.js'
-import addAdmin from './controllers/admin.js'
-import routeNotfound from './controllers/notFound.js'
-import employee from './controllers/employee.js'
+import defRoutes from './routes/default.js'
+import addAdmin from './routes/admin.js'
+import routeNotfound from './routes/notFound.js'
+import employee from './routes/employee.js'
 const app = express()
 
 app.use(express.json())
