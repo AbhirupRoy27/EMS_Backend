@@ -22,10 +22,18 @@ const addTask = async (req, res) => {
 
     const isEmployeePresent = await Employee.aggregate([
       { $match: { email: req.body.task_for.trim() } },
-      { $project: { email: 1, _id: 0 } },
+      { $project: { email: 1, tasks: 1, _id: 0 } },
     ])
     if (isEmployeePresent.length < 1) {
       throw Error(`No Employee with email: { ${req.body.task_for.trim()} }`)
+    }
+
+    if (isEmployeePresent[0].tasks.length >= 2) {
+      return res.status(409).json({
+        success: false,
+        isEmployeePresent,
+        limit: 'limit of task on this employee reaced',
+      })
     }
 
     const task = dateFormatter(req.body)
@@ -41,7 +49,7 @@ const addTask = async (req, res) => {
         taskAdded,
       })
     }
-    // // // res.status(304).end()  // use this because, res.status(304).json({..}) construct is a logical inconsistency in HTTP communication and should be avoided.
+    // res.status(304).end()  // use this because, res.status(304).json({..}) construct is a logical inconsistency in HTTP communication and should be avoided.
     res.status(200).json({
       status: true,
       message: 'No data changed',

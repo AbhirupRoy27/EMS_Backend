@@ -1,11 +1,9 @@
 import { Employee } from '../../db/empSchema.js'
-import { Task } from '../../db/taskSchema.js'
 import connectDB from '../../utils/connectDB.js'
 
 const defaultResponse = async (req, res) => {
-  await connectDB()
+  // await connectDB()
 
-  // await Task.deleteMany({})
   // await Employee.collection.dropIndexes()
   // await Employee.syncIndexes()
 
