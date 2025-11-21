@@ -1,5 +1,13 @@
+import { Employee } from '../../db/empSchema.js'
+import { Task } from '../../db/taskSchema.js'
+import connectDB from '../../utils/connectDB.js'
+
 const defaultResponse = async (req, res) => {
-  // await connectDB()
+  await connectDB()
+
+  // await Task.deleteMany({})
+  // await Employee.collection.dropIndexes()
+  // await Employee.syncIndexes()
 
   // const count = await Employee.countDocuments({ deadline: { $type: 'string' } })
   res.status(200).json({

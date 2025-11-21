@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Mongoose } from 'mongoose'
 
 const EmployeeSchema = new mongoose.Schema({
   name: {
@@ -20,7 +20,10 @@ const EmployeeSchema = new mongoose.Schema({
   position: String,
   department: String,
 
-  tasks: { type: Array },
+  tasks: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'task',
+  },
 
   joinedAt: {
     type: Date,

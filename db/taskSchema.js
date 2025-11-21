@@ -2,6 +2,11 @@ import mongoose from 'mongoose'
 
 const TaskSchema = new mongoose.Schema(
   {
+    task_for: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     task_title: {
       type: String,
       required: true,
