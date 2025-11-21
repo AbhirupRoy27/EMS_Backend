@@ -1,15 +1,15 @@
 import express from 'express'
 import cors from 'cors'
 import defRoutes from './routes/default.js'
-import addAdmin from './routes/admin.js'
-import routeNotfound from './routes/notFound.js'
+import adminRouter from './routes/admin.js'
 import employee from './routes/employee.js'
+import routeNotfound from './utils/errorHandler.js'
 const app = express()
 
 app.use(express.json())
 app.use(cors())
 
-app.use('/api/admin', addAdmin)
+app.use('/api/admin', adminRouter)
 app.use('/api/employee', employee)
 app.use('/', defRoutes)
 app.use(routeNotfound)
