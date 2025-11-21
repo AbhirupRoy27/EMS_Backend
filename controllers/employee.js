@@ -5,13 +5,18 @@ import { Employee } from '../db/empSchema.js'
 import duplicateValueError from '../utils/duplicateValueError.js'
 import { dataAdded, defaultError } from '../utils/commonResponse.js'
 import dateFormatter from '../utils/dateFormatter.js'
+import mongoose from 'mongoose'
 const employee = Router()
 
-employee.get('/', (req, res) => {
+employee.get('/', async (req, res) => {
+  await connectDB()
+
+  // const count = await Employee.countDocuments({ deadline: { $type: 'string' } })
   res.status(200).json({
     status: true,
     message: 'Employee Working fine!',
     url: req.originalUrl,
+    // DB: count,
   })
 })
 
@@ -20,7 +25,7 @@ employee.post('/add-emp', async (req, res) => {
     if (!req.body) {
       throw new Error('No Body Provided: [Body Empty]')
     }
-    connectDB()
+
     const data = await employeeDataFormatter(req)
     const updated = await Employee.create(data)
     console.log(updated)
@@ -38,7 +43,7 @@ employee.post('/add-task', async (req, res) => {
     if (!req.body) {
       throw Error('Empty Body')
     }
-    connectDB()
+    await connectDB()
     // await Employee.collection.dropIndexes()
     // await Employee.syncIndexes()
     const email = req.body.email.trim()
