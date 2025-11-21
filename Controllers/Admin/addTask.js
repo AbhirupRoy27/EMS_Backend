@@ -28,8 +28,8 @@ const addTask = async (req, res) => {
       throw Error(`No Employee with email: { ${req.body.task_for.trim()} }`)
     }
 
-    if (isEmployeePresent[0].tasks.length >= 2) {
-      return res.status(409).json({
+    if (isEmployeePresent[0].tasks.length >= 10) {
+      return res.status(200).json({
         success: false,
         isEmployeePresent,
         limit: 'limit of task on this employee reaced',
@@ -60,7 +60,7 @@ const addTask = async (req, res) => {
       return res.status(401).json({ status: false, message: error.message })
     }
     if (error.code == 11000) {
-      return res.status(409).json({
+      return res.status(200).json({
         status: false,
         message: 'Two task with same deadline not allowed.',
       })
