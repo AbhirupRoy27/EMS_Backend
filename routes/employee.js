@@ -6,7 +6,7 @@ const employee = Router()
 
 employee.post('/add-emp', addEmployee)
 
-employee.get('/get-tasks', getTask)
+employee.post('/get-tasks', getTask)
 
 employee.get('/', defaultResponse)
 
