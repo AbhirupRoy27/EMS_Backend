@@ -6,8 +6,17 @@ import { AdminModel } from '../../db/adminSchema.js'
 
 const addTask = async (req, res) => {
   try {
-    if (!req.body) {
-      throw Error('Empty Body')
+    const task = dateFormatter(req.body)
+    if (task === 'empty-Body') {
+      return res.status(409).json({
+        status: false,
+        message: 'empty body',
+      })
+    } else if (!task) {
+      return res.status(409).json({
+        status: task,
+        message: 'the deadline is in the past!',
+      })
     }
 
     await connectDB()
@@ -36,7 +45,6 @@ const addTask = async (req, res) => {
       })
     }
 
-    const task = dateFormatter(req.body)
     const taskAdded = await Task.create(task)
     const updatedTask = await Employee.updateOne(
       { email: req.body.task_for.trim() },
