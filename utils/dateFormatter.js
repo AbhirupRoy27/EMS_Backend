@@ -6,9 +6,8 @@ export default function dateFormatter(body) {
   const date = new Date(body.deadline)
   // const currentDate = String(new Date().toISOString())
   const currentDate = new Date()
-
   if (date < currentDate) return false
   // console.log(date)
-  body.deadline = date
+  body.deadline = date.toISOString()
   return body
 }

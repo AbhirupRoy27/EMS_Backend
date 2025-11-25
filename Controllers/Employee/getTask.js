@@ -4,20 +4,20 @@ import connectDB from '../../utils/connectDB.js'
 
 const getTask = async (req, res) => {
   try {
-    if (!req.body.email) {
+    if (!req.body.task_for) {
       throw new Error('Email Missing in body.')
     }
 
     await connectDB()
     const user = await Employee.findOne(
-      { email: req.body.email },
+      { email: req.body.task_for },
       { _id: 0, tasks: 1 }
     )
     if (!user) {
       res.status(404).json({
         status: false,
         message: 'No Such Employee found.',
-        email: req.body.email,
+        email: req.body.task_for,
       })
     }
 
