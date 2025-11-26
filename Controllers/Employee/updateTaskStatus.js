@@ -2,7 +2,7 @@ import { Task } from '../../db/taskSchema.js'
 import connectDB from '../../utils/connectDB.js'
 import { errorEmptyBody } from '../../utils/errorHandler.js'
 
-const getActiveTask = async (req, res) => {
+const updateTaskStatus = async (req, res) => {
   try {
     if (
       !req.body ||
@@ -19,18 +19,26 @@ const getActiveTask = async (req, res) => {
 
       const data = await Task.findOneAndUpdate(
         { _id: req.body._id, task_status: { $ne: req.body.task_status } },
-        { $set: { task_status: 'pending' } },
-        { new: true, projection: { task_status: 1, _id: 0 } }
+        { $set: { task_status: req.body.task_status } },
+
+        {
+          new: true,
+          projection: {
+            deadline: 1,
+            task_given_by: 1,
+            task_status: 1,
+            task_title: 1,
+            _id: 0,
+          },
+        }
       )
 
       if (!data) {
-        return res
-          .status(404)
-          .json({
-            status: false,
-            code: 'NOT_FOUND',
-            message: 'Task not found or already Updated',
-          })
+        return res.status(404).json({
+          status: false,
+          code: 'NOT_FOUND',
+          message: 'Task not found or already Updated',
+        })
       }
       return res.status(200).json({
         status: true,
@@ -47,4 +55,4 @@ const getActiveTask = async (req, res) => {
   }
 }
 
-export default getActiveTask
+export default updateTaskStatus
