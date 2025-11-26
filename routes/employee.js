@@ -1,15 +1,18 @@
 import { Router } from 'express'
 import defaultResponse from '../Controllers/Employee/default.js'
-import getTask from '../Controllers/Employee/getTask.js'
 import addEmployee from '../Controllers/Employee/addEmployee.js'
-import getActiveTask from '../Controllers/Employee/updateTaskStatus.js'
+import updateTaskStatus from '../Controllers/Employee/updateTaskStatus.js'
+import getPendingTask from '../Controllers/Employee/getPendingTask.js'
+import getActiveTasks from '../Controllers/Employee/getActiveTask.js'
 const employee = Router()
 
 employee.post('/add-emp', addEmployee)
 
-employee.post('/get-tasks', getTask)
+employee.post('/get-tasks', getPendingTask)
 
-employee.patch('/update-task', getActiveTask)
+employee.post('/active-task', getActiveTasks)
+
+employee.patch('/update-task', updateTaskStatus)
 
 employee.get('/', defaultResponse)
 
