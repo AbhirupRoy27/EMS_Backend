@@ -2,7 +2,7 @@ import { Employee } from '../../db/empSchema.js'
 import { Task } from '../../db/taskSchema.js'
 import connectDB from '../../utils/connectDB.js'
 
-const getTask = async (req, res) => {
+const getPendingTask = async (req, res) => {
   try {
     if (!req.body.task_for) {
       throw new Error('Email Missing in body.')
@@ -14,7 +14,7 @@ const getTask = async (req, res) => {
       { _id: 0, tasks: 1 }
     )
     if (!user) {
-      res.status(404).json({
+      return res.status(404).json({
         status: false,
         message: 'No Such Employee found.',
         email: req.body.task_for,
@@ -24,6 +24,7 @@ const getTask = async (req, res) => {
     const tasks = await Task.find(
       {
         _id: { $in: user.tasks },
+        task_status: { $eq: 'pending' },
       },
       { task_title: 1, task_status: 1, task_given_by: 1, deadline: 1 }
     )
@@ -33,10 +34,10 @@ const getTask = async (req, res) => {
       tasks,
     })
   } catch (error) {
-    res
+    return res
       .status(404)
       .json({ status: false, message: 'Not Found', error: error.message })
   }
 }
 
-export default getTask
+export default getPendingTask
