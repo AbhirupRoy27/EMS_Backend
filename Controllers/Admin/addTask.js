@@ -40,8 +40,8 @@ const addTask = async (req, res) => {
     if (isEmployeePresent[0].tasks.length >= 10) {
       return res.status(200).json({
         success: false,
-        isEmployeePresent,
-        limit: 'limit of task on this employee reaced',
+        // isEmployeePresent,
+        message: 'limit of task on this employee reaced',
       })
     }
 

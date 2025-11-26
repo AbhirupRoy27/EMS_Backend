@@ -1,6 +1,8 @@
+import mongoose from 'mongoose'
 import { Task } from '../../db/taskSchema.js'
 import connectDB from '../../utils/connectDB.js'
 import { errorEmptyBody } from '../../utils/errorHandler.js'
+import { Employee } from '../../db/empSchema.js'
 
 const updateTaskStatus = async (req, res) => {
   try {
@@ -15,12 +17,16 @@ const updateTaskStatus = async (req, res) => {
     }
 
     if (req.body._id && req.body.task_status) {
+      const taskId = new mongoose.Types.ObjectId(req.body._id)
       await connectDB()
 
       const data = await Task.findOneAndUpdate(
-        { _id: req.body._id, task_status: { $ne: req.body.task_status } },
-        { $set: { task_status: req.body.task_status } },
-
+        { _id: taskId, task_status: { $ne: req.body.task_status } },
+        {
+          $set: {
+            task_status: req.body.task_status,
+          },
+        },
         {
           new: true,
           projection: {
@@ -40,6 +46,25 @@ const updateTaskStatus = async (req, res) => {
           message: 'Task not found or already Updated',
         })
       }
+
+      if (data.task_status === 'completed') {
+        const updatedData = await Employee.updateOne(
+          {
+            tasks: taskId,
+          },
+          { $pull: { tasks: taskId } },
+          { new: true, projection: { _id: 0, tasks: 1 } }
+        )
+        if (updatedData.modifiedCount === 1) {
+          return res.status(200).json({
+            status: true,
+            updatedData,
+            message: 'UPDATED!!',
+          })
+        }
+        throw new Error('Internal Server Error')
+      }
+
       return res.status(200).json({
         status: true,
         data,
@@ -51,7 +76,7 @@ const updateTaskStatus = async (req, res) => {
     if (error.message === 'Missing Fileds')
       return res.status(404).json({ status: false, message: 'Missing data' })
 
-    return console.error(404, error)
+    return res.status(500).json({ status: false, message: error.message })
   }
 }
 
