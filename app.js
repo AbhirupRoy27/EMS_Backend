@@ -7,11 +7,7 @@ import routeNotfound from './utils/errorHandler.js'
 const app = express()
 
 app.use(express.json())
-app.use(
-  cors({
-    origin: ['http://localhost:5173', 'https://worksync-emp.netlify.app/'],
-  })
-)
+app.use(cors())
 
 app.use('/api/admin', adminRouter)
 app.use('/api/employee', employee)

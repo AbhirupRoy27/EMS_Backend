@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 import { Task } from '../../db/taskSchema.js'
 import connectDB from '../../utils/connectDB.js'
 import { errorEmptyBody } from '../../utils/errorHandler.js'
-import { Employee } from '../../db/empSchema.js'
 
 const updateTaskStatus = async (req, res) => {
   try {
