@@ -24,7 +24,7 @@ const getPendingTask = async (req, res) => {
     const tasks = await Task.find(
       {
         _id: { $in: user.tasks },
-        task_status: { $eq: 'pending' },
+        // task_status: { $eq: 'pending' },
       },
       { task_title: 1, task_status: 1, task_given_by: 1, deadline: 1 }
     )
