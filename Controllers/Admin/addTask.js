@@ -37,20 +37,20 @@ const addTask = async (req, res) => {
       throw Error(`No Employee with email: { ${req.body.task_for.trim()} }`)
     }
 
-    if (isEmployeePresent[0].tasks.length >= 10) {
-      return res.status(200).json({
-        success: false,
-        // isEmployeePresent,
-        message: 'limit of task on this employee reaced',
-      })
-    }
+    // if (isEmployeePresent[0].tasks.length >= 10) {
+    //   return res.status(200).json({
+    //     success: false,
+    //     // isEmployeePresent,
+    //     message: 'limit of task on this employee reaced',
+    //   })
+    // }
 
     const taskAdded = await Task.create(task)
-    const updatedTask = await Employee.updateOne(
-      { email: req.body.task_for.trim() },
-      { $push: { tasks: taskAdded._id } }
-    )
-    if (updatedTask.matchedCount > 0) {
+    // const updatedTask = await Employee.updateOne(
+    //   { email: req.body.task_for.trim() },
+    //   { $push: { tasks: taskAdded._id } }
+    // )
+    if (taskAdded) {
       return res.status(200).json({
         status: true,
         message: 'Working',

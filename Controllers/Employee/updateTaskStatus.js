@@ -47,23 +47,26 @@ const updateTaskStatus = async (req, res) => {
         })
       }
 
-      if (data.task_status === 'completed') {
-        const updatedData = await Employee.updateOne(
-          {
-            tasks: taskId,
-          },
-          { $pull: { tasks: taskId } },
-          { new: true, projection: { _id: 0, tasks: 1 } }
-        )
-        if (updatedData.modifiedCount === 1) {
-          return res.status(200).json({
-            status: true,
-            updatedData,
-            message: 'UPDATED!!',
-          })
-        }
-        throw new Error('Internal Server Error')
-      }
+      // if (data.task_status === 'completed') {
+      //   const updatedData = await Employee.updateOne(
+      //     {
+      //       tasks: taskId,
+      //     },
+      //     { $pull: { tasks: taskId } }
+      //     // { new: true, projection: { _id: 0, tasks: 1 } }
+      //   )
+      //   if (updatedData.matchedCount === 0) {
+      //     return res.status(404).json({
+      //       updatedData,
+      //     })
+      //     // throw new Error('Internal Server Error')
+      //   }
+      //   return res.status(200).json({
+      //     status: true,
+      //     updatedData,
+      //     message: 'UPDATED!!',
+      //   })
+      // }
 
       return res.status(200).json({
         status: true,
