@@ -5,7 +5,8 @@ import updateTaskStatus from '../Controllers/Employee/updateTaskStatus.js'
 import getPendingTask from '../Controllers/Employee/getPendingTask.js'
 import getFilterTasks from '../Controllers/Employee/getFilterTask.js'
 import getTaskById from '../Controllers/Employee/getTaskById.js'
-import getTaskCount from '../utils/Task/getTaskCont.js'
+import getTaskCount from '../Controllers/Employee/getTaskCont.js'
+
 const employee = Router()
 
 employee.post('/add-emp', addEmployee)

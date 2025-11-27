@@ -1,5 +1,5 @@
 import { Task } from '../../db/taskSchema.js'
-import connectDB from '../connectDB.js'
+import connectDB from '../../utils/connectDB.js'
 
 const getTaskCount = async (req, res) => {
   try {
@@ -22,6 +22,27 @@ const getTaskCount = async (req, res) => {
           _id: 0,
           status: '$_id', // rename _id to "status"
           count: 1,
+        },
+      },
+      {
+        $addFields: {
+          sortOrder: {
+            $switch: {
+              branches: [
+                { case: { $eq: ['$status', 'accepted'] }, then: 1 },
+                { case: { $eq: ['$status', 'pending'] }, then: 2 },
+                { case: { $eq: ['$status', 'completed'] }, then: 3 },
+                { case: { $eq: ['$status', 'failed'] }, then: 4 },
+              ],
+              default: 999,
+            },
+          },
+        },
+      },
+      { $sort: { sortOrder: 1 } },
+      {
+        $project: {
+          sortOrder: 0,
         },
       },
     ])
