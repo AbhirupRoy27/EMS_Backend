@@ -12,7 +12,7 @@ const getTaskCount = async (req, res) => {
     }
 
     await connectDB()
-    const data = await Task.aggregate([
+    const result = await Task.aggregate([
       {
         $match: { task_for: email },
       },
@@ -46,6 +46,13 @@ const getTaskCount = async (req, res) => {
         },
       },
     ])
+
+    const allStatuses = ['accepted', 'pending', 'completed', 'failed']
+
+    const data = allStatuses.map((status) => {
+      const found = result.find((d) => d.status === status)
+      return found || { count: 0, status }
+    })
 
     if (data.length < 1) {
       return res.status(404).json({
